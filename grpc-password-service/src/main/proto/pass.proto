@@ -5,9 +5,9 @@ import "google/protobuf/wrappers.proto";
 option java_multiple_files = true;
 option java_package = "ie.gmit.ds";
 
-service PasswordService {
-   rpc hash(HashRequest) returns (HashResponse);
-   rpc validate(ValidateRequest) returns (google.protobuf.BoolValue);
+service PassHash{
+	rpc Hash(HashRequest) returns (HashResponse);
+	rpc Validate(ValidateRequest) returns (google.protobuf.BoolValue);
 }
 
 message HashRequest{
@@ -16,14 +16,13 @@ message HashRequest{
 }
 
 message HashResponse{
-	int32 userID = 3;
-	bytes hashed = 4;
-	bytes salt = 5;
+	int32 userID = 1;
+	bytes hash = 2;
+	bytes salt = 3;
 }
 
 message ValidateRequest{
-	string password = 6;
-	bytes hashed = 7;
-	string salt = 8;
+	string password = 1;
+	bytes hash = 2;
+	bytes salt = 3;
 }
-
