@@ -1,0 +1,17 @@
+syntax = "proto3";
+package ie.gmit.ds;
+import "google/protobuf/wrappers.proto";
+
+option java_multiple_files = true;
+option java_package = "ie.gmit.ds";
+
+service PasswordService {
+   rpc hash(google.protobuf.Int32Value, google.protobuf.StringValue) returns (HashResponse);
+   rpc validate(google.protobuf.StringValue, google.protobuf.Int32Value, google.protobuf.StringValue) returns (google.protobuf.BoolValue);
+}
+
+message HashResponse{
+	int userID = 1;
+	int hashed = 2;
+	string salt = 3;
+}
