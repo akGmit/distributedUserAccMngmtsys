@@ -13,10 +13,9 @@ public class PassHashImpl extends PassHashImplBase {
 
 		byte[] salt = Passwords.getNextSalt();
 		byte[] hashed = Passwords.hash(request.getPassword().toCharArray(), salt);
-		HashResponse r = HashResponse.newBuilder().setUserID(request.getUserID())
-							.setHash(ByteString.copyFrom(hashed))
-								.setSalt(ByteString.copyFrom(salt)).build();
-		
+		HashResponse r = HashResponse.newBuilder().setUserID(request.getUserID()).setHash(ByteString.copyFrom(hashed))
+				.setSalt(ByteString.copyFrom(salt)).build();
+
 		responseObserver.onNext(r);
 		responseObserver.onCompleted();
 	}
@@ -24,13 +23,13 @@ public class PassHashImpl extends PassHashImplBase {
 	@Override
 	public void validate(ie.gmit.ds.ValidateRequest request,
 			io.grpc.stub.StreamObserver<com.google.protobuf.BoolValue> responseObserver) {
-		
+
 		byte[] salt = request.getSalt().toByteArray();
 		byte[] h = request.getHash().toByteArray();
 		String pass = request.getPassword();
-		
+
 		boolean isValid = Passwords.isExpectedPassword(pass.toCharArray(), salt, h);
-		
+
 		responseObserver.onNext(BoolValue.of(isValid));
 		responseObserver.onCompleted();
 	}
