@@ -1,0 +1,7 @@
+passServiceHost: 127.0.0.1
+passServicePort: 33333
+
+server:
+  applicationConnectors:
+    - type: http
+      port: 9000

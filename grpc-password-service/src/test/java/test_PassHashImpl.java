@@ -83,6 +83,7 @@ public class test_PassHashImpl {
 				ByteString resTesthash = ByteString.copyFrom(Passwords.hash(pass.toCharArray(), testSalt));
 				HashResponse expected = HashResponse.newBuilder().setUserID(5555).setSalt(ByteString.copyFrom(testSalt))
 						.setHash(resTesthash).build();
+				
 				assertTrue(value.equals(expected));
 			}
 
@@ -103,6 +104,7 @@ public class test_PassHashImpl {
 		}finally {
 			Thread.currentThread().join(2000);
 		}
+		
 		
 	}
 }
