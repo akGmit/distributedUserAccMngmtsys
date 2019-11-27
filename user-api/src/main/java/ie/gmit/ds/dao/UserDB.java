@@ -11,9 +11,12 @@ public class UserDB {
 	public static HashMap<Integer, User> users = new HashMap<>();
    
 	static{
-    	users.put(1, new User(1, "a", "a@a.com", "123456", "hH0UCayHs0fdeBU76VMCUoRFyQTQnfzVzRbtIXkRzfc=".getBytes(), "fKt+KANV54fISpVGBXOzv5Uv/jxGfPloWOrkyTC2jeA=".getBytes()));
-    	users.put(2, new User(2, "b", "b@b.com", "123456", "hH0UCayHs0fdeBU76VMCUoRFyQTQnfzVzRbtIXkRzfc=".getBytes(), "fKt+KANV54fISpVGBXOzv5Uv/jxGfPloWOrkyTC2jeA=".getBytes()));
-    	users.put(3, new User(3, "c", "c@c.com", "123456", "hH0UCayHs0fdeBU76VMCUoRFyQTQnfzVzRbtIXkRzfc=".getBytes(), "fKt+KANV54fISpVGBXOzv5Uv/jxGfPloWOrkyTC2jeA=".getBytes()));
+		User u = new User(1, "1", "a@a.com","123456");
+		u.setHashedPassword("hH0UCayHs0fdeBU76VMCUoRFyQTQnfzVzRbtIXkRzfc=".getBytes());
+		u.setSalt("fKt+KANV54fISpVGBXOzv5Uv/jxGfPloWOrkyTC2jeA=".getBytes());
+    	users.put(1, u);
+    	users.put(2, u);
+    	users.put(3, u); 
     }
 	
 	public static List<User> getUsers(){

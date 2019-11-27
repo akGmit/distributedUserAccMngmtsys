@@ -4,32 +4,42 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import ie.gmit.ds.validations.Modify;
 import ie.gmit.ds.validations.Read;
 
-@XmlRootElement
+@XmlRootElement(name="user")
 public class User {
 	
 	@NotNull
-	private int userID;
+	private Integer userID;
 	
+	@NotNull
 	@NotBlank
 	@Length(min=2, max=255)
 	private String userName;
 	
+	@NotNull
 	@NotBlank
 	@Pattern(regexp=".+@.+\\.[a-z]+")
 	private String email;
 	
-	@NotBlank(message = "Password is required", groups = {Modify.class})
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@NotBlank
+	@NotNull(message = "Password is required", groups = {Modify.class})
 	private String password;
 	
+	@JsonProperty(access = Access.READ_ONLY)
 	@NotNull(message = "Password hash must be not null", groups = {Read.class})
 	private byte[] hashedPassword;
 	
+	@JsonProperty(access = Access.READ_ONLY)
 	@NotNull(message = "Salt must be not null", groups = {Read.class})
 	private byte[] salt;
 	
@@ -43,54 +53,37 @@ public class User {
 		this.email = email;
 		this.password = password;
 	}
-
-	public User(int userID, String userName, String email, String password, byte[] hashedPassword, byte[] salt) {
-		super();
-		this.userID = userID;
-		this.userName = userName;
-		this.email = email;
-		this.password = password;
-		this.hashedPassword = hashedPassword;
-		this.salt = salt;
-	}
 	
-	@JsonProperty
 	@XmlElement
-	public int getUserID() {
+	@JsonProperty
+	public Integer getUserID() {
 		return userID;
 	}
-	
-	@JsonProperty
 	@XmlElement
+	@JsonProperty
 	public String getUserName() {
 		return userName;
 	}
-	
-	@JsonProperty
 	@XmlElement
+	@JsonProperty
 	public String getEmail() {
 		return email;
 	}
-	
-	@JsonProperty
 	@XmlElement
+	@JsonProperty
 	public String getPassword() {
 		return password;
 	}
 	
-	@JsonProperty
-	@XmlElement
 	public byte[] getHashedPassword() {
 		return hashedPassword;
 	}
 	
-	@JsonProperty
-	@XmlElement
 	public byte[] getSalt() {
 		return salt;
 	}
 
-	public void setUserID(int userID) {
+	public void setUserID(Integer userID) {
 		this.userID = userID;
 	}
 

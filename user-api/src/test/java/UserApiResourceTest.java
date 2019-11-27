@@ -1,23 +1,33 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
+
 import javax.ws.rs.core.Response;
-import org.junit.Before;
-import org.junit.BeforeClass;
+
+import org.junit.AfterClass;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ie.gmit.ds.User;
 import ie.gmit.ds.UserApiApplication;
 import ie.gmit.ds.UserApiConfig;
+import ie.gmit.ds.dao.UserDB;
 import ie.gmit.ds.resources.UserApiResource;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.setup.Environment;
 
 class UserApiResourceTest {
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserApiResourceTest.class);
+	
 	private static final Environment environment = mock(Environment.class);
 	private final JerseyEnvironment jersey = mock(JerseyEnvironment.class);
 	private final UserApiApplication application = new UserApiApplication();
 	private static final UserApiConfig config = new UserApiConfig();
 	private static UserApiResource res  = new UserApiResource(environment.getValidator(), config);
+	
+	@AfterClass
+	public static void printDB() {
+		LOGGER.debug(UserDB.getUsers().toString());
+	}
 	
 	@Test
 	void testGetUsers() throws Exception, Exception {
@@ -35,7 +45,7 @@ class UserApiResourceTest {
 	}
 
 	@Test
-	//Test fails with violations in addNewUser method body, comment it out before testing
+	//Test fails with violations in addNewUser() method body, comment it out before testing
 	void testAddNewUser() {
 		// Valid user
 		User u = new User(44, "a", "a@a.com", "123456");
@@ -59,6 +69,24 @@ class UserApiResourceTest {
 		
 		//Invalid user id
 		r = res.deleteUser(456456);
+		assertEquals(404, r.getStatus());
+	}
+	
+	@Test
+	//Test fails with violations in updateUser() method body, comment it out before testing
+	void testUpdateUser() {
+		User u = UserDB.getUser(1);
+		
+		u.setPassword("654321");
+		
+		//Valid update
+		Response r = res.updateUser(u);
+		assertEquals(200, r.getStatus());
+		
+		//Invalid update
+		
+		u.setUserID(3215);
+		r = res.updateUser(u);
 		assertEquals(404, r.getStatus());
 	}
 
