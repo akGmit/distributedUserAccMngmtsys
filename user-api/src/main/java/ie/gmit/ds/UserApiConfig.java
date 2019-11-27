@@ -6,10 +6,10 @@ import io.dropwizard.Configuration;
 
 public class UserApiConfig extends Configuration{
 	@NotNull
-	private String passServiceHost;
+	private String passServiceHost = "127.0.0.1";
 	
 	@NotNull
-	private int passServicePort;
+	private int passServicePort = 33333;
 
 	@JsonProperty
 	public String getPassServiceHost() {
@@ -19,6 +19,17 @@ public class UserApiConfig extends Configuration{
 	@JsonProperty
 	public int getPassServicePort() {
 		return passServicePort;
+	}
+	
+	//For testing purposes
+	@JsonProperty
+	public void setPassServiceHost(String passServiceHost) {
+		this.passServiceHost = passServiceHost;
+	}
+	
+	@JsonProperty
+	public void setPassServicePort(int passServicePort) {
+		this.passServicePort = passServicePort;
 	}
 	
 	

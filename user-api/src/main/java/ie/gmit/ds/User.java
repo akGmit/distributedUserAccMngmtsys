@@ -35,6 +35,14 @@ public class User {
 	
 	public User () {
 	}
+	
+	public User (int userID, String userName, String email, String password) {
+		super();
+		this.userID = userID;
+		this.userName = userName;
+		this.email = email;
+		this.password = password;
+	}
 
 	public User(int userID, String userName, String email, String password, byte[] hashedPassword, byte[] salt) {
 		super();

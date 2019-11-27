@@ -1,7 +1,8 @@
 package ie.gmit.ds.client;
 
-import java.util.logging.Logger;
 import javax.validation.constraints.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.google.protobuf.BoolValue;
 import com.google.protobuf.ByteString;
 import ie.gmit.ds.HashRequest;
@@ -16,22 +17,22 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
 public class PwdHashClient {
-	private final Logger logger = Logger.getLogger(PwdHashClient.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(PwdHashClient.class);
 	private ManagedChannel channel;
 	private PassHashStub asyncStub;
 	private PassHashBlockingStub syncStub;
 
 	public PwdHashClient(String host, int port) {
-		logger.info("PwdHashClient creating...");
+		LOGGER.info("PwdHashClient using "+ host + " and " + port + " port. Initializing...");
 		channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build();
 		asyncStub = PassHashGrpc.newStub(channel);
 		syncStub = PassHashGrpc.newBlockingStub(channel);
-		logger.info("Created!");
+		LOGGER.info("DONE!");
 	}
 
 	public boolean validate(@NotNull String password, @NotNull byte[] hash, @NotNull byte[] salt) {
 
-		logger.info("Validating...");
+		LOGGER.info("Validating...");
 
 		ValidateRequest req = ValidateRequest.newBuilder().setPassword(password).setHash(ByteString.copyFrom(hash))
 				.setSalt(ByteString.copyFrom(salt)).build();
@@ -41,14 +42,14 @@ public class PwdHashClient {
 		try {
 			valid = syncStub.validate(req);
 		} catch (Exception e) {
-			logger.warning("Validation: something went wrong");
+			LOGGER.error("Validation: something went wrong");
 		}
-
+		
 		return valid.getValue();
 	}
 
 	public User hash(@NotNull int userID, @NotNull String password, @NotNull User u) {
-		logger.info("Getting hash and salt...");
+		LOGGER.info("Getting hash and salt...");
 
 		User user = u;
 
@@ -64,19 +65,19 @@ public class PwdHashClient {
 
 			@Override
 			public void onError(Throwable t) {
-				logger.info("Hashing: something went wrong.");
+				LOGGER.error("Hashing: something went wrong.");
 			}
 
 			@Override
 			public void onCompleted() {
-				logger.info("Hashing done!");
+				LOGGER.info("Hashing done!");
 			}
 		};
 
 		try {
 			asyncStub.hash(req, so);
 		} catch (Exception e) {
-			logger.warning("Hashing: something went wrong.");
+			LOGGER.error("Hashing: something went wrong.");
 		}
 
 		return user;

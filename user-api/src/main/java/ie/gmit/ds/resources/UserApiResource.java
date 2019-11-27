@@ -1,7 +1,6 @@
 package ie.gmit.ds.resources;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
@@ -28,7 +27,7 @@ import io.dropwizard.validation.Validated;
 @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 public class UserApiResource {
 
-	private final Validator validator;
+	public final Validator validator;
 	private PwdHashClient pwdHashClient;
 
 	public UserApiResource(Validator validator, UserApiConfig c) {
@@ -40,8 +39,8 @@ public class UserApiResource {
 	}
 
 	@GET
-	public Collection<User> getUsers() {
-		return UserDB.getUsers();
+	public Response getUsers() {
+		return Response.ok(UserDB.getUsers()).build();
 	}
 
 	@GET
@@ -59,23 +58,24 @@ public class UserApiResource {
 
 	@POST
 	public Response addNewUser(@Valid @Validated(Modify.class) User u) {
+
 		Set<ConstraintViolation<User>> violations = validator.validate(u);
-        
+
 		if (violations.size() > 0) {
-            ArrayList<String> validationMessages = new ArrayList<String>();
-            for (ConstraintViolation<User> violation : violations) {
-                validationMessages.add(violation.getPropertyPath().toString() + ": " + violation.getMessage());
-            }
-            return Response.status(Status.BAD_REQUEST).entity(validationMessages).build();
-        }
-		
-        if(UserDB.userExists(u.getUserID())){
-        	return Response.status(Status.CONFLICT).entity("User with this ID already exists").build();
-        }else {
-        	u = pwdHashClient.hash(u.getUserID(), u.getPassword(), u);
-        	UserDB.addUser(u);
-        }
-		return Response.ok(Status.CREATED).build();
+			ArrayList<String> validationMessages = new ArrayList<String>();
+			for (ConstraintViolation<User> violation : violations) {
+				validationMessages.add(violation.getPropertyPath().toString() + ": " + violation.getMessage());
+			}
+			return Response.status(Status.BAD_REQUEST).entity(validationMessages).build();
+		}
+
+		if (UserDB.userExists(u.getUserID())) {
+			return Response.status(Status.CONFLICT).entity("User with this ID already exists").build();
+		} else {
+			u = pwdHashClient.hash(u.getUserID(), u.getPassword(), u);
+			UserDB.addUser(u);
+		}
+		return Response.status(Status.CREATED).build();
 	}
 
 	@DELETE
