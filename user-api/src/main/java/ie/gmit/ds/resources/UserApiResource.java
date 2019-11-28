@@ -2,12 +2,13 @@ package ie.gmit.ds.resources;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
-import javax.inject.Singleton;
 import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import javax.validation.Validator;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -24,21 +25,23 @@ import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ie.gmit.ds.RequestUser;
 import ie.gmit.ds.User;
 import ie.gmit.ds.UserApiConfig;
 import ie.gmit.ds.client.PwdHashClient;
 import ie.gmit.ds.dao.UserDB;
+import ie.gmit.ds.validations.Login;
 import ie.gmit.ds.validations.Modify;
 import io.dropwizard.validation.Validated;
 
 @Path("/users")
-@Singleton
 @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 public class UserApiResource {
-	private static final Logger LOGGER = LoggerFactory.getLogger(UserApiResource.class);
+	
 	private final Validator validator;
 	private PwdHashClient pwdHashClient;
+	private final String USR_NOT_FOUND = "User NOT found.";
 
 	public UserApiResource(Validator validator, UserApiConfig c) {
 		String host = c.getPassServiceHost();
@@ -50,7 +53,6 @@ public class UserApiResource {
 
 	@GET
 	public Response getUsers() {
-		LOGGER.info("Get all users.");
 		GenericEntity<Collection<User>> userList = new GenericEntity<Collection<User>>(UserDB.getUsers()) {};
 		return Response.ok(userList).build();
 	}
@@ -64,61 +66,57 @@ public class UserApiResource {
 		if (user != null) {
 			return Response.ok(user).build();
 		} else {
-			LOGGER.info("User NOT found.");
-			return Response.status(Status.NOT_FOUND).entity("User NOT found.").build();
+			return Response.status(Status.NOT_FOUND).entity(USR_NOT_FOUND).build();
 		}
 	}
 
 	@POST
-	public Response addNewUser(@Valid @Validated(Modify.class) User u) {
-		
-		//Comment this out when running tests 
-		//-----------
-		Set<ConstraintViolation<User>> violations = validator.validate(u);
+	public Response addNewUser(@Valid @Validated(Modify.class) RequestUser reqUsr) {
+		List<String> v = checkForViolations(reqUsr);
+		if (v != null)
+			return Response.status(Status.BAD_REQUEST).entity("Violations: {}" + v).build();
 
-		if (violations.size() > 0) {
-			ArrayList<String> validationMessages = new ArrayList<String>();
-			for (ConstraintViolation<User> violation : violations) {
-				validationMessages.add(violation.getPropertyPath().toString() + ": " + violation.getMessage());
-			}
-			return Response.status(Status.BAD_REQUEST).entity(validationMessages).build();
-		}
-		//^^^^^^^^^^^^
+		User usr = (User) reqUsr;
 
-		if (UserDB.userExists(u.getUserID())) {
+		if (UserDB.userExists(reqUsr.getUserID())) {
 			return Response.status(Status.CONFLICT).entity("User with this ID already exists").build();
 		} else {
-			u = pwdHashClient.hash(u.getUserID(), u.getPassword(), u);
-			UserDB.addUser(u);
+			usr = pwdHashClient.hash(reqUsr.getUserID(), reqUsr.getPassword(), usr);
+			UserDB.addUser(usr);
 		}
-		return Response.status(Status.CREATED).entity("User with " + u.getUserID() + "id CREATED.").build();
+		return Response.status(Status.CREATED).entity("User with " + reqUsr.getUserID() + "id CREATED.").build();
+	}
+
+	@POST
+	@Path("/login")
+	public Response login(@Valid @Validated(Login.class) RequestUser reqUsr) {
+		
+		if (!UserDB.userExists(reqUsr.getUserID()))
+			return Response.status(Status.NOT_FOUND).entity(USR_NOT_FOUND).build();
+		
+		User usrDB = UserDB.getUser(reqUsr.getUserID());
+		
+		boolean valid = pwdHashClient.validate(reqUsr.getPassword(), usrDB.getHashedPassword(), usrDB.getSalt());
+		
+		if (valid)
+			return Response.status(Status.ACCEPTED).entity("User logged in.").build();
+		
+		return Response.status(Status.FORBIDDEN).entity("Password incorrect.").build();
 	}
 
 	@PUT
-	public Response updateUser(@Valid @Validated(Modify.class) User u) {
+	public Response updateUser(@Valid @Validated(Modify.class) RequestUser reqUsr) {
+		User usr = (RequestUser) reqUsr;
 		
-		//Comment this out when running tests 
-		//-----------
-		Set<ConstraintViolation<User>> violations = validator.validate(u);
-
-		if (violations.size() > 0) {
-			ArrayList<String> validationMessages = new ArrayList<String>();
-			for (ConstraintViolation<User> violation : violations) {
-				validationMessages.add(violation.getPropertyPath().toString() + ": " + violation.getMessage());
-			}
-			return Response.status(Status.BAD_REQUEST).entity(validationMessages).build();
-		}
-		//^^^^^^^^^^^^
-
-		if (UserDB.userExists(u.getUserID())) {
-			u = pwdHashClient.hash(u.getUserID(), u.getPassword(), u);
-			UserDB.updateUser(u.getUserID(), u);
+		if (UserDB.userExists(reqUsr.getUserID())) {
+			usr = pwdHashClient.hash(reqUsr.getUserID(), reqUsr.getPassword(), usr);
+			UserDB.updateUser(reqUsr.getUserID(), usr);
 			return Response.status(Status.OK).build();
 		} else {
-			return Response.status(Status.NOT_FOUND).entity("User NOT found").build();
+			return Response.status(Status.NOT_FOUND).entity(USR_NOT_FOUND).build();
 		}
 	}
-
+	
 	@DELETE
 	@Path("/{userID}")
 	public Response deleteUser(@PathParam("userID") Integer id) {
@@ -126,7 +124,21 @@ public class UserApiResource {
 			UserDB.removeUser(id);
 			return Response.ok().build();
 		} else {
-			return Response.status(Status.NOT_FOUND).entity("User NOT found.").build();
+			return Response.status(Status.NOT_FOUND).entity(USR_NOT_FOUND).build();
 		}
 	}
+
+	private <E> List<String> checkForViolations(@NotNull E v) {
+		Set<ConstraintViolation<E>> violations = validator.validate(v);
+
+		if (violations.size() > 0) {
+			ArrayList<String> validationMessages = new ArrayList<String>();
+			for (ConstraintViolation<E> violation : violations) {
+				validationMessages.add(violation.getPropertyPath().toString() + ": " + violation.getMessage());
+			}
+			return validationMessages;
+		}
+		return null;
+	}
+
 }

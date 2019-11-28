@@ -20,17 +20,4 @@ public class UserApiConfig extends Configuration{
 	public int getPassServicePort() {
 		return passServicePort;
 	}
-	
-	//For testing purposes
-	@JsonProperty
-	public void setPassServiceHost(String passServiceHost) {
-		this.passServiceHost = passServiceHost;
-	}
-	
-	@JsonProperty
-	public void setPassServicePort(int passServicePort) {
-		this.passServicePort = passServicePort;
-	}
-	
-	
 }

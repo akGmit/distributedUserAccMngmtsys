@@ -5,7 +5,7 @@ server:
     type: http
     port: 9000
   requestLog:
-	appenders:
+    appenders:
       - type: console
 
 passServiceHost: 127.0.0.1
