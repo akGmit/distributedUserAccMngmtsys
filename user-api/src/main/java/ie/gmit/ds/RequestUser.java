@@ -12,7 +12,12 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import ie.gmit.ds.validations.Login;
 import ie.gmit.ds.validations.Modify;
-
+/**
+ * RequestUser class extends User and is used for representing user object sent in create or update requests.
+ * It has only one local instance variable which holds password.
+ * @author andko
+ *
+ */
 @XmlAccessorType(value = XmlAccessType.PROPERTY)
 @XmlRootElement(name = "requestUser")
 public class RequestUser extends User {
@@ -28,7 +33,7 @@ public class RequestUser extends User {
 		super(userID, userName, email);
 		this.password = password;
 	}
-
+	
 	@JsonProperty(access = Access.WRITE_ONLY)
 	public String getPassword() {
 		return password;

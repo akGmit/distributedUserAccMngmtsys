@@ -15,11 +15,20 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import ie.gmit.ds.validations.Login;
 import ie.gmit.ds.validations.Modify;
 import ie.gmit.ds.validations.Read;
-
+/**
+ * User class representing user entities of an application.
+ * This class holds all the required information about user, except password.
+ * It is configured to be serializable/deserializable to JSON and XML formats.
+ * @author andko
+ *
+ */
 @XmlAccessorType(value = XmlAccessType.FIELD)
 @XmlRootElement
 public class User {
-
+	/**
+	 * Instance variables with validation annotaions.
+	 * Variables are assigned to different validation groups depending on where they are required.
+	 */
 	@NotNull(message = "ID is required", groups = { Modify.class, Login.class })
 	private Integer userID;
 
