@@ -13149,3 +13149,35 @@ org.eclipse.core.runtime.CoreException: Could not resolve artifact com.sun.xml.b
 2019-11-28 16:06:18,852 [Worker-24: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
 2019-11-28 16:06:18,854 [Worker-24: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
 2019-11-28 16:06:18,854 [Worker-24: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2019-11-29 21:38:27,450 [Worker-1: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2019-11-29 21:39:12,070 [Worker-7: Updating Maven Project] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update started
+2019-11-29 21:39:15,489 [Worker-7: Updating Maven Project] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: ie.gmit.ds:user-api:0.0.1-SNAPSHOT @ /home/andko/Documents/distributed_systems/user-api/pom.xml.
+2019-11-29 21:39:20,985 [Worker-7: Updating Maven Project] INFO  o.e.m.c.i.embedder.EclipseLogger - Skipping compilation because build context has no changes.
+2019-11-29 21:39:20,993 [Worker-7: Updating Maven Project] INFO  o.e.m.c.i.embedder.EclipseLogger - Skipping compilation because build context has no changes.
+2019-11-29 21:39:21,361 [Worker-7: Updating Maven Project] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /user-api/src/main/java
+2019-11-29 21:39:21,369 [Worker-7: Updating Maven Project] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /user-api/target/generated-sources/protobuf/java
+2019-11-29 21:39:21,371 [Worker-7: Updating Maven Project] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /user-api/target/generated-sources/protobuf/grpc-java
+2019-11-29 21:39:21,372 [Worker-7: Updating Maven Project] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /user-api/src/main/resources
+2019-11-29 21:39:21,375 [Worker-7: Updating Maven Project] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /user-api/src/main/proto
+2019-11-29 21:39:21,376 [Worker-7: Updating Maven Project] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /user-api/src/main/proto
+2019-11-29 21:39:21,381 [Worker-7: Updating Maven Project] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /user-api/src/test/java
+2019-11-29 21:39:21,381 [Worker-7: Updating Maven Project] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /user-api/src/test/resources
+2019-11-29 21:39:22,551 [Worker-7: Updating Maven Project] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update completed: 10 sec
+2019-11-29 21:39:26,980 [Worker-8: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2019-11-29 21:39:26,986 [Worker-8: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2019-11-29 21:39:26,999 [Worker-8: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2019-11-29 21:39:27,004 [Worker-8: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2019-11-29 21:39:44,497 [main] INFO  o.e.m2e.actions.ExecutePomAction - Creating new launch configuration
+2019-11-29 21:39:51,740 [Worker-12: Launching user-api (12)] INFO  o.e.m.i.launch.MavenLaunchDelegate - /home/andko/Documents/distributed_systems/user-api
+2019-11-29 21:39:51,740 [Worker-12: Launching user-api (12)] INFO  o.e.m.i.launch.MavenLaunchDelegate -  mvn -B compile
+2019-11-29 21:40:11,265 [Worker-0: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Skipping compilation because build context has no changes.
+2019-11-29 21:40:11,282 [Worker-0: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Skipping compilation because build context has no changes.
+2019-11-29 21:40:11,284 [Worker-0: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2019-11-29 21:40:11,286 [Worker-0: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2019-11-29 21:40:11,288 [Worker-0: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2019-11-29 21:40:11,302 [Worker-0: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2019-11-29 21:40:11,310 [Worker-0: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2019-11-29 21:40:11,311 [Worker-0: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2019-11-29 21:40:26,590 [main] INFO  o.e.m2e.actions.ExecutePomAction - Creating new launch configuration
+2019-11-29 21:40:34,506 [Worker-13: Launching user-api (13)] INFO  o.e.m.i.launch.MavenLaunchDelegate - /home/andko/Documents/distributed_systems/user-api
+2019-11-29 21:40:34,507 [Worker-13: Launching user-api (13)] INFO  o.e.m.i.launch.MavenLaunchDelegate -  mvn -B package
